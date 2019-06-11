@@ -30,7 +30,7 @@ export class CatService {
     @InjectRepository( 'Cat' ) private readonly repository: Repository<imodel.Cat>
   ) {}
 
-  async paginate( pageable: Pageable ): Promise<Pagination<imodel.Cat>> {
+  async paginate( pageable: Pageable ): Promise<Page<imodel.Cat>> {
     return await paginate<imodel.Cat>( this.repository, pageable );
   }
 }
