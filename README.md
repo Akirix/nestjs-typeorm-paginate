@@ -1,51 +1,54 @@
-# nestjs typeorm paginate
+# typeorm paginate
 
 <a href="https://travis-ci.org/bashleigh/nestjs-typeorm-paginate"><img src="https://travis-ci.org/bashleigh/nestjs-typeorm-paginate.svg?branch=master"/></a>
 <a href="https://www.npmjs.com/package/nestjs-typeorm-paginate"><img src="https://img.shields.io/npm/v/nestjs-typeorm-paginate.svg"/></a>
 <a href='https://coveralls.io/github/bashleigh/nestjs-typeorm-paginate?branch=master'><img src='https://coveralls.io/repos/github/bashleigh/nestjs-typeorm-paginate/badge.svg?branch=master' alt='Coverage Status' /></a>
 
-I made this quick package to limit the amout of times I was implementing this functionality. 
+I forked this from <a href="https://github.com/bashleigh" >Bashleigh</a> to use for easy pagination.
 
 ## Install 
 
+While connected to our company registry (Verdaccio)..
+
 ```bash
-$ yarn add nestjs-typeorm-paginate
+$ npm install typeorm-paginate
 ```
 
 ## Usage
 
 ##### Service
 ```ts
-import {Injectable} from '@nestjs/common';
-import {Repository} from 'typeorm';
-import {InjectRepository} from '@nestjs/typeorm';
-import {CatEntity} from './entities';
-import {paginate, Pagination, IPaginationOptions} from 'nestjs-typeorm-paginate';
+import { injectable } from 'inversify';
+import { Repository } from 'typeorm';
+import { InjectRepository } from 'typeorm';
+import { paginate, Pageable, Page } from 'typeorm-paginate';
 
-@Injectable()
+@injectable()
 export class CatService {
+
   constructor (
-    @InjectRepository(CatEntity) private readonly repository: Repository<CatEntity>,
+    @InjectRepository( 'Cat' ) private readonly repository: Repository<imodel.Cat>
   ) {}
 
-  async paginate(options: IPaginationOptions): Promise<Pagination<CatEntity>> {
-    return await paginate<CatEntity>(this.repository, options);
+  async paginate( pageable: Pageable ): Promise<Pagination<imodel.Cat>> {
+    return await paginate<imodel.Cat>( this.repository, pageable );
   }
 }
 ```
 
 ##### Controller
 ```ts
-import {Controller, Get, Query} from '@nestjs/common';
-import {CatService} from './cat.service';
+import { Controller, Get, Query } from 'inversify-restify-utils';
 
-@Controller('cats')
+@Controller( '/cats' )
 export class CatsController {
-  constructor(private readonly catService: CatService) {}
-  @Get('')
-  async index(@Query('page') page: number = 0, @Query('limit') limit: number = 10) {
+
+  constructor( private readonly catService: iservice.Cat ) {}
+  
+  @Get( '/withNineLives' )
+  async index( @Query( 'page' ) page: number = 0, @Query( 'limit' ) limit: number = 10 ) {
     limit = limit > 100 ? 100 : limit;
-    return await this.catService.paginate({page, limit, route: 'http://cats.com/cats',});
+    return await this.catService.getAllCatsWithNineLives( { page, limit, route: 'http://cats.com/cats' } );
   }
 }
 ```
@@ -102,13 +105,13 @@ export class CatsController {
 @Injectable()
 export class CatService {
   constructor (
-    @InjectRepository(CatEntity) private readonly repository: Repository<CatEntity>,
+    @InjectRepository( 'Cat' ) private readonly repository: Repository<imodel.Cat>,
   ) {}
 
-  async paginate(options: IPaginationOptions): Promise<Pagination<CatEntity>> {
-    return await paginate<CatEntity>(this.repository, options, {
-        lives: 9,
-    });
+  async getAllCatsWithNineLives( pageable: Pageable ): Promise<Page<imodel.Cat>> {
+    return await paginate<imodel.Cat>( this.repository, pageable, {
+        lives: 9
+    } );
   }
 }
 ```
