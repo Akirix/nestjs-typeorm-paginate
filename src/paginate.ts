@@ -1,12 +1,12 @@
 import { Repository, FindConditions, FindManyOptions } from "typeorm";
-import { Pagination } from "./pagination";
-import { IPaginationOptions } from "./interfaces";
+import { Page } from "./Page";
+import { Pageable } from "./interfaces";
 
 export async function paginate<T>(
   repository: Repository<T>,
-  options: IPaginationOptions,
+  options: Pageable,
   searchOptions?: FindConditions<T> | FindManyOptions<T>
-): Promise<Pagination<T>> {
+): Promise<Page<T>> {
   const page =
     options.page > 0 ? options.page - 1 : options.page < 0 ? 0 : options.page;
   const limit = options.limit;
@@ -29,7 +29,7 @@ export async function paginate<T>(
     previous: isPrevious ? `${route}?page=${page}&limit=${limit}` : ""
   };
 
-  return new Pagination(
+  return new Page(
     items,
     items.length,
     total,
