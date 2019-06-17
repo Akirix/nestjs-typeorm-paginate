@@ -8,7 +8,7 @@
   "main": "./dist/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bashleigh/nestjs-typeorm-paginate"
+    "url": "https://github.com/Akirix/typeorm-paginate"
   },
   "description": "A simple pagination function to build a pagination object with types",
   "keywords": [
@@ -18,11 +18,7 @@
     "paginate"
   ],
   "devDependencies": {
-    "@nestjs/common": "^6.1.1",
-    "@nestjs/core": "^6.1.1",
-    "@nestjs/testing": "^6.1.1",
-    "@nestjs/typeorm": "^5.2.2",
-    "@types/jest": "^24.0.11",
+    "@types/node": "^12.0.8",
     "coveralls": "^3.0.3",
     "jest": "^24.7.1",
     "prettier": "^1.16.2",
@@ -38,7 +34,6 @@
     "build": "tsc -p ."
   },
   "peerDependencies": {
-    "@nestjs/common": "^6.1.1 || ^5.6.2",
     "typeorm": "^0.2.12"
   },
   "jest": {
@@ -54,5 +49,5 @@
     },
     "coverageDirectory": "../coverage"
   },
-  "version": "0.1.7-alpha"
+  "version": "0.1.8-alpha"
 }
